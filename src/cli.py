@@ -32,6 +32,7 @@ from src.reporting.console import ConsoleReporter
 from src.reporting.email_report import EmailReporter
 from src.reporting.export import ReportExporter
 from src.storage.bigquery_dedup import BigQueryDedup
+from src.storage.fetch_cache import FetchCache
 from src.storage.history import HistoryTracker
 from src.storage.store import DataStore
 
@@ -62,9 +63,16 @@ def _setup_logging(verbose: bool) -> None:
 
 
 def _fetch_all(
-    config: dict, source_filter: list[str] | None = None
+    config: dict,
+    source_filter: list[str] | None = None,
+    fetch_cache: FetchCache | None = None,
 ) -> tuple[list[FetchedItem], list[str]]:
     """Stáhne data ze všech povolených zdrojů.
+
+    Args:
+        config: Konfigurace aplikace
+        source_filter: Volitelný filtr zdrojů
+        fetch_cache: Cache posledního běhu – přeskočí staré články
 
     Returns:
         Tuple (seznam položek, seznam použitých zdrojů)
@@ -89,9 +97,26 @@ def _fetch_all(
         try:
             fetcher = fetcher_class(source_cfg)
             items = fetcher.fetch()
+
+            # Filtrování starých článků přes fetch cache
+            if fetch_cache:
+                before = len(items)
+                items = fetch_cache.filter_new_items(items, source_name)
+                skipped = before - len(items)
+                if skipped > 0:
+                    console.print(
+                        f"[green]{len(items)} nových[/green] "
+                        f"[dim](přeskočeno {skipped} starých)[/dim]"
+                    )
+                else:
+                    console.print(f"[green]{len(items)} položek[/green]")
+                # Aktualizovat cache timestamp pro tento zdroj
+                fetch_cache.update(source_name)
+            else:
+                console.print(f"[green]{len(items)} položek[/green]")
+
             all_items.extend(items)
             sources_used.append(source_name)
-            console.print(f"[green]{len(items)} položek[/green]")
         except Exception as e:
             console.print(f"[red]CHYBA: {e}[/red]")
             logging.getLogger(__name__).error("Fetcher %s selhal: %s", source_name, e)
@@ -187,8 +212,11 @@ def scan(ctx: click.Context, sources: str | None, no_report: bool, email: bool, 
     # Filtr zdrojů
     source_filter = [s.strip() for s in sources.split(",")] if sources else None
 
+    # Inicializace fetch cache (přeskakování starých článků)
+    fetch_cache = FetchCache(data_dir)
+
     console.print("[bold blue]FÁZE 1: Sběr dat[/bold blue]")
-    items, sources_used = _fetch_all(config, source_filter)
+    items, sources_used = _fetch_all(config, source_filter, fetch_cache)
 
     if not items:
         console.print("[red]Žádná data nebyla stažena![/red]")
