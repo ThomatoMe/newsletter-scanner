@@ -91,6 +91,13 @@ scoring:
 ai:
   enabled: false
 
+# BigQuery deduplikace – neposílat články, které už byly v předchozích newsletterech
+bigquery:
+  enabled: true
+  project: "thomitko-project-sand-box"
+  dataset: "newsletter_scanner"
+  dedup_days: 7                       # Kolik dní zpětně kontrolovat duplicity
+
 categories:
   marketing_digital:
     display_name: "Marketing / Digital"

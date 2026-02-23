@@ -31,6 +31,7 @@ from src.processing.summarizer import TopicSummarizer
 from src.reporting.console import ConsoleReporter
 from src.reporting.email_report import EmailReporter
 from src.reporting.export import ReportExporter
+from src.storage.bigquery_dedup import BigQueryDedup
 from src.storage.history import HistoryTracker
 from src.storage.store import DataStore
 
@@ -193,6 +194,21 @@ def scan(ctx: click.Context, sources: str | None, no_report: bool, email: bool, 
         console.print("[red]Žádná data nebyla stažena![/red]")
         return
 
+    # Deduplikace – odfiltrování již odeslaných článků
+    dedup = BigQueryDedup(config)
+    if dedup.enabled and dedup.client:
+        dedup_days = config.get("bigquery", {}).get("dedup_days", 7)
+        original_count = len(items)
+        items = dedup.filter_new(items, days=dedup_days)
+        console.print(
+            f"  Deduplikace: [green]{len(items)} nových[/green] "
+            f"(přeskočeno {original_count - len(items)} již odeslaných)"
+        )
+
+    if not items:
+        console.print("[yellow]Žádné nové články – vše už bylo odesláno dříve.[/yellow]")
+        return
+
     # Uložení surových dat
     store = DataStore(data_dir)
     for source_name in sources_used:
@@ -271,6 +287,10 @@ def scan(ctx: click.Context, sources: str | None, no_report: bool, email: bool, 
             email_reporter = EmailReporter(config)
             if email_reporter.send_report(clusters, items, metadata, newsletter_intro):
                 console.print("[green]odesláno[/green]")
+                # Označit odeslané články v BigQuery
+                if dedup.enabled and dedup.client:
+                    dedup.mark_sent(items, clusters)
+                    console.print("  BigQuery: odeslané články uloženy pro deduplikaci")
             else:
                 console.print("[red]selhalo (zkontroluj email konfiguraci)[/red]")
 

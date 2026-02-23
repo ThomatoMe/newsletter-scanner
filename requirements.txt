@@ -18,6 +18,9 @@ rich>=13.0.0
 # Konfigurace
 pyyaml>=6.0
 
+# Google Cloud (BigQuery deduplikace)
+google-cloud-bigquery>=3.0.0
+
 # Testování
 pytest>=8.0.0
 pytest-cov>=4.0.0
