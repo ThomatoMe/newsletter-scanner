@@ -1,0 +1,119 @@
+# LinkedIn Topic Scanner - Cloud konfigurace
+# Citlivé údaje se čtou z environment proměnných
+
+general:
+  language: "english"
+  max_items_per_source: 100
+  dedup_similarity_threshold: 0.85
+  data_dir: "/tmp/data"
+
+sources:
+  google_news:
+    enabled: true
+    rate_limit: 3.0
+    queries:
+      - "digital marketing trends"
+      - "AI marketing automation"
+      - "GA4 analytics"
+      - "BigQuery analytics"
+      - "LinkedIn marketing strategy"
+      - "data-driven marketing"
+      - "marketing analytics tools"
+      - "generative AI business"
+
+  reddit:
+    enabled: true
+    rate_limit: 2.0
+    sort: "top"
+    time_filter: "week"
+    limit: 50
+    subreddits:
+      - "marketing"
+      - "digital_marketing"
+      - "analytics"
+      - "datascience"
+      - "artificial"
+      - "MachineLearning"
+      - "PPC"
+      - "SEO"
+      - "bigquery"
+      - "googleanalytics"
+
+  hackernews:
+    enabled: true
+    rate_limit: 0.5
+    max_stories: 200
+    relevance_keywords:
+      - "marketing"
+      - "analytics"
+      - "AI"
+      - "machine learning"
+      - "data"
+      - "advertising"
+      - "google"
+      - "tracking"
+      - "LLM"
+      - "SEO"
+
+  google_trends:
+    enabled: true
+    rate_limit: 5.0
+    geo: "US"
+    keyword_groups:
+      - ["digital marketing", "content marketing", "SEO trends"]
+      - ["generative AI", "AI tools", "ChatGPT"]
+      - ["GA4", "BigQuery", "data analytics"]
+
+  linkedin_rss:
+    enabled: false
+    rate_limit: 3.0
+    newsletter_urls: []
+
+processing:
+  extraction_method: "tfidf"
+  top_keywords: 30
+  ngram_range: [1, 3]
+  min_document_frequency: 2
+  clustering:
+    enabled: true
+    min_clusters: 3
+    max_clusters: 15
+    method: "minibatch_kmeans"
+
+scoring:
+  weights:
+    frequency: 0.30
+    recency: 0.30
+    source_diversity: 0.25
+    engagement: 0.15
+  recency_decay_hours: 48
+
+ai:
+  enabled: false
+
+categories:
+  marketing_digital:
+    display_name: "Marketing / Digital"
+  ai_ml:
+    display_name: "AI / Machine Learning"
+  data_analytics:
+    display_name: "Data / Analytics"
+
+# Email - app_password se čte z env proměnné GMAIL_APP_PASSWORD
+email:
+  enabled: true
+  smtp_server: "smtp.gmail.com"
+  smtp_port: 587
+  sender: "thomitko@gmail.com"
+  app_password: ""
+  recipients:
+    - "thomitko@gmail.com"
+    - "tomas.nechutny@carldatacompany.com"
+
+reporting:
+  console:
+    top_n: 15
+    show_sources: true
+  export:
+    json: false
+    csv: false

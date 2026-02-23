@@ -1,0 +1,144 @@
+# LinkedIn Topic Scanner - Slovníky klíčových slov pro kategorizaci
+
+marketing_digital:
+  # Obecný marketing
+  - marketing
+  - digital marketing
+  - brand
+  - branding
+  - campaign
+  - advertising
+  - ad tech
+  - programmatic
+  # Content & Social
+  - content marketing
+  - social media
+  - social media marketing
+  - influencer marketing
+  - linkedin marketing
+  - content strategy
+  - copywriting
+  - email marketing
+  - newsletter
+  # SEO & SEM
+  - seo
+  - search engine optimization
+  - sem
+  - ppc
+  - google ads
+  - paid media
+  - paid search
+  - organic search
+  - serp
+  - keyword research
+  # Měření a konverze
+  - conversion rate
+  - cro
+  - conversion optimization
+  - landing page
+  - a/b testing
+  - marketing attribution
+  - marketing automation
+  - lead generation
+  - demand generation
+  # Web a tracking
+  - gtm
+  - google tag manager
+  - tag management
+  - cookie consent
+  - cookiebot
+  - consent mode
+  - privacy
+  - gdpr
+
+ai_ml:
+  # Obecné AI
+  - artificial intelligence
+  - ai
+  - machine learning
+  - deep learning
+  - neural network
+  - generative ai
+  - gen ai
+  # LLM a chatboty
+  - llm
+  - large language model
+  - gpt
+  - chatgpt
+  - claude
+  - gemini
+  - copilot
+  - openai
+  - anthropic
+  # Aplikace AI
+  - nlp
+  - natural language processing
+  - computer vision
+  - recommendation system
+  - ai agent
+  - ai automation
+  - ai tools
+  - ai assistant
+  - prompt engineering
+  - rag
+  - retrieval augmented generation
+  # ML engineering
+  - model training
+  - fine tuning
+  - transformer
+  - embedding
+  - vector database
+  - mlops
+
+data_analytics:
+  # Analytics nástroje
+  - analytics
+  - google analytics
+  - ga4
+  - adobe analytics
+  - mixpanel
+  - amplitude
+  - posthog
+  - clarity
+  - hotjar
+  # BI a vizualizace
+  - business intelligence
+  - looker
+  - looker studio
+  - data studio
+  - power bi
+  - tableau
+  - dashboard
+  - reporting
+  - visualization
+  # Data engineering
+  - bigquery
+  - data warehouse
+  - data lake
+  - data pipeline
+  - etl
+  - elt
+  - dbt
+  - airflow
+  - data engineering
+  - sql
+  - python
+  # Data science
+  - data science
+  - statistics
+  - experiment
+  - experimentation
+  - a/b test
+  - hypothesis testing
+  - predictive analytics
+  - forecasting
+  # Metriky
+  - kpi
+  - metrics
+  - roi
+  - ltv
+  - retention
+  - churn
+  - attribution
+  - funnel
+  - cohort

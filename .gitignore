@@ -1,0 +1,31 @@
+# Data (surová data, reporty, historie)
+data/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtuální prostředí
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Citlivé údaje – lokální config s hesly
+config/config.yaml
+
+# Logy
+data/scan_log.txt

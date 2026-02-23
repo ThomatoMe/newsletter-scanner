@@ -1,0 +1,24 @@
+# LinkedIn Topic Scanner - závislosti
+
+# HTTP a RSS parsování
+feedparser>=6.0.0
+requests>=2.31.0
+
+# Google Trends
+pytrends>=4.9.0
+
+# NLP a analýza
+scikit-learn>=1.4.0
+numpy>=1.26.0
+
+# CLI a formátování
+click>=8.1.0
+rich>=13.0.0
+
+# Konfigurace
+pyyaml>=6.0
+
+# Testování
+pytest>=8.0.0
+pytest-cov>=4.0.0
+responses>=0.25.0

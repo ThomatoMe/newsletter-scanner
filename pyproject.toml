@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "newsletter-scanner"
+version = "0.1.0"
+description = "Denní newsletter – trending témata v Marketing, AI a Analytics z veřejných zdrojů"
+requires-python = ">=3.11"
+dependencies = [
+    "feedparser>=6.0.0",
+    "requests>=2.31.0",
+    "pytrends>=4.9.0",
+    "scikit-learn>=1.4.0",
+    "numpy>=1.26.0",
+    "click>=8.1.0",
+    "rich>=13.0.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+    "responses>=0.25.0",
+]
+nlp = [
+    "keybert>=0.8.0",
+]
+
+[project.scripts]
+lts = "src.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
