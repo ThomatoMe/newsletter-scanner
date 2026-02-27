@@ -182,7 +182,7 @@ class EmailReporter:
         for idx in cluster.get("item_indices", [])[:8]:
             if idx < len(items):
                 item = items[idx]
-                if item.title and item.url:
+                if item.title:
                     article_items.append(item)
 
         if article_items:
@@ -193,9 +193,15 @@ class EmailReporter:
                 desc = re.sub(r"<[^>]+>", "", item.description or "")[:150]
                 desc = html.unescape(desc).strip()
 
+                # Článek s odkazem nebo jen text (Google Trends bez URL)
+                if item.url:
+                    title_html = f'<a href="{_escape(item.url)}" style="text-decoration:none;color:#1e40af;font-size:14px;font-weight:500;line-height:1.4;">{_escape(item.title)}</a>'
+                else:
+                    title_html = f'<span style="font-size:14px;font-weight:500;line-height:1.4;color:#374151;">{_escape(item.title)}</span>'
+
                 articles_html += f"""
 <div style="padding:8px 0;border-bottom:1px solid #f3f4f6;">
-    <a href="{_escape(item.url)}" style="text-decoration:none;color:#1e40af;font-size:14px;font-weight:500;line-height:1.4;">{_escape(item.title)}</a>
+    {title_html}
     {"<p style='margin:4px 0 0;font-size:12px;color:#6b7280;line-height:1.4;'>" + _escape(desc) + "</p>" if desc else ""}
     <p style="margin:2px 0 0;">{source_badge}</p>
 </div>"""

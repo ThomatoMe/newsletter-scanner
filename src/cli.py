@@ -212,6 +212,12 @@ def scan(ctx: click.Context, sources: str | None, no_report: bool, email: bool, 
     # Filtr zdrojů
     source_filter = [s.strip() for s in sources.split(",")] if sources else None
 
+    # Kontrola duplicitního spuštění – pokud už byl dnes newsletter odeslán, přeskočit
+    dedup = BigQueryDedup(config)
+    if dedup.enabled and dedup.client and dedup.was_sent_today():
+        console.print("[yellow]Newsletter už byl dnes odeslán – přeskakuji.[/yellow]")
+        return
+
     # Inicializace fetch cache (přeskakování starých článků)
     fetch_cache = FetchCache(data_dir)
 
@@ -223,7 +229,6 @@ def scan(ctx: click.Context, sources: str | None, no_report: bool, email: bool, 
         return
 
     # Deduplikace – odfiltrování již odeslaných článků
-    dedup = BigQueryDedup(config)
     if dedup.enabled and dedup.client:
         dedup_days = config.get("bigquery", {}).get("dedup_days", 7)
         original_count = len(items)

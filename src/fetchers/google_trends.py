@@ -1,6 +1,7 @@
 """Fetcher pro Google Trends (pytrends). Celý modul je zabalený v try/except."""
 
 from datetime import datetime, timezone
+from urllib.parse import quote_plus
 
 from src.fetchers.base import BaseFetcher, FetchedItem
 
@@ -43,6 +44,7 @@ class GoogleTrendsFetcher(BaseFetcher):
                     FetchedItem(
                         title=keyword,
                         description=f"Trending search: {keyword}",
+                        url=f"https://trends.google.com/trends/explore?q={quote_plus(keyword)}&date=now%207-d",
                         source=self.source_name,
                         source_detail="trending_searches",
                         published=now,
@@ -73,6 +75,7 @@ class GoogleTrendsFetcher(BaseFetcher):
                                 FetchedItem(
                                     title=query_text,
                                     description=f"Related to: {kw}",
+                                    url=f"https://trends.google.com/trends/explore?q={quote_plus(query_text)}&date=now%207-d",
                                     source=self.source_name,
                                     source_detail=f"related_top:{kw}",
                                     published=now,
@@ -90,6 +93,7 @@ class GoogleTrendsFetcher(BaseFetcher):
                                 FetchedItem(
                                     title=query_text,
                                     description=f"Rising related to: {kw}",
+                                    url=f"https://trends.google.com/trends/explore?q={quote_plus(query_text)}&date=now%207-d",
                                     source=self.source_name,
                                     source_detail=f"related_rising:{kw}",
                                     published=now,

@@ -94,6 +94,28 @@ class BigQueryDedup:
             logger.warning("BigQuery čtení selhalo: %s", e)
             return set()
 
+    def was_sent_today(self) -> bool:
+        """Zkontroluje, jestli už byl dnes odeslán newsletter."""
+        if not self.client:
+            return False
+
+        sql = f"""
+        SELECT COUNT(*) as cnt
+        FROM `{self.project}.{self.dataset}.sent_articles`
+        WHERE sent_date = CURRENT_DATE()
+        """
+
+        try:
+            result = self.client.query(sql).result()
+            count = list(result)[0].cnt
+            if count > 0:
+                logger.info("BigQuery: dnes už bylo odesláno %d článků – přeskakuji", count)
+                return True
+            return False
+        except Exception as e:
+            logger.warning("BigQuery kontrola dnešního odeslání selhala: %s", e)
+            return False
+
     def filter_new(self, items: list, days: int = 7) -> list:
         """Odfiltruje již odeslané články. Vrací jen nové.
 
